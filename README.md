@@ -4,5 +4,6 @@ Installation
   * Install python-virtualenv
   * Jump into xenadm directory
   * and type ". venv/bin/activate"
+  * Launch the admin app with "python xenadm.py"
 
 That's all! 

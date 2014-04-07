@@ -5,9 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
-
+    <style>
+    body {
+      background-color: #3498db;
+      background-image:url({{ url_for('static', filename='Xen_logo.png') }});
+      background-repeat:no-repeat;
+      background-position:center center;
+    }
+    .footer {
+      background-color : #3498db;
+      color : white;
+    }
+    .footer a {
+      color : white;
+    }
+    html,body{
+      background-color: #3498db;
+      height: 100%
+    }
+    </style>
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -21,6 +40,11 @@
 		{% block content %}
 		{% endblock %}
 	</div>
+        <div class="footer navbar-fixed-bottom">
+        <center>
+	Created by <a href="http://lambdacrash.fr" alt="Lambdacrash">Lambdacrash</a> & <a href="http://www.sublimigeek.fr/" alt="Joel Le Corre">Joël Le Corre</a>
+        <center>
+        </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

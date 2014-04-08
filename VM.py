@@ -11,14 +11,3 @@ class VM:
         self.name = name
         self.status = status
 
-    def start(self):
-        print("Start VM")
-        # xe start blablabla --id self.id
-
-    def stop(self):
-        print("Stop VM")
-        # xe stop blablabla --id self.id
-
-    def snap(self):
-        print("Snap VM")
-        # xe snap blablabla --id self.id

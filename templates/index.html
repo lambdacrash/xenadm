@@ -32,11 +32,19 @@ Xen Server [{{ servername }}] - VM Ligh administration
     </thead>
     <tbody>
       {% for vm in vms %}
-        <tr><td>{{ vm.name }}</td><td>{{ vm.ip }}</td><td>{{ vm.status }}</td>
+        <tr><td>{{ vm.name }}</td><td>{{ vm.ip }}</td>
+            <td>
+                {% if vm.status == "running" %}
+                    <span class="label label-success" >{{ vm.status }}</span>
+                {% endif %}
+                {% if vm.status == "halted" %}
+                    <span class="label label-default" >{{ vm.status }}</span>
+                {% endif %}
+            </td>
         <td>
 	<a href="/start/{{ vm.id }}" class="btn btn-success">Start</a>
-	<a href="/stop/{{ vm.id }}" class="btn btn-danger">Stop</a>
 	<a href="/snap/{{ vm.id }}" class="btn btn-warning">Snapshot</a>
+	<a href="/stop/{{ vm.id }}" class="btn btn-danger">Stop</a>
         </td></tr>
       {% endfor %}
     </tbody>

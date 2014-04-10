@@ -23,23 +23,26 @@ app.secret_key = 'some_secret'
 
 @app.route('/start/<vmid>')
 def start_vm(vmid):
-    flash("VM "+vmid+" about to be stared")	
+    flash("VM "+vmid+" about to be started")	
     ret = server.start_vm(vmid)
-    flash(ret)	
+    if ret != "":
+        flash(ret)	
     return redirect("/")
 
 @app.route('/stop/<vmid>')
 def stop_vm(vmid):
     flash("VM "+vmid+" about to be halted")	
     ret = server.stop_vm(vmid)
-    flash(ret)	
+    if ret != "":
+        flash(ret)	
     return redirect("/")
 
 @app.route('/snap/<vmid>', methods=['POST'])
 def snap_vm(vmid):
     flash("Snapshot of "+vmid+" created with name "+request.form["snapshot_name"])	
-    r = server.snap_vm(vmid, name=request.form["snapshot_name"], descr=request.form["snapshot_description"])
-    flash(r)
+    ret = server.snap_vm(vmid, name=request.form["snapshot_name"], descr=request.form["snapshot_description"])
+    if ret != "":
+        flash(ret)	
     return redirect("/")
 
 @app.route('/snap/<vmid>', methods=['GET'])
@@ -50,7 +53,10 @@ def snap_vm_form(vmid):
 @app.route('/revert/<vmid>/<sid>', methods=['GET'])
 def snap_revert(vmid, sid):
     flash("VM "+vmid+" was reverted with the snapshot "+str(sid))	
-    vm = server.revert_snapshot(vmid, sid)
+    vm = server.get_vm(vmid)
+    ret = server.revert_snapshot(vmid, sid)
+    if ret != "":
+        flash(ret)	
     return render_template("index.html", servername=socket.gethostname(), vm=vm)
 
 @app.route('/viewsnap/<vmid>')

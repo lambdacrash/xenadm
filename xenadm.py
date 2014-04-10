@@ -23,21 +23,21 @@ app.secret_key = 'some_secret'
 
 @app.route('/start/<vmid>')
 def start_vm(vmid):
-    # do some shit xe blablabla
+    flash("VM "+vmid+" about to be stared")	
     ret = server.start_vm(vmid)
     flash(ret)	
     return redirect("/")
 
 @app.route('/stop/<vmid>')
 def stop_vm(vmid):
-    # do some shit xe blablabla
+    flash("VM "+vmid+" about to be halted")	
     ret = server.stop_vm(vmid)
     flash(ret)	
     return redirect("/")
 
 @app.route('/snap/<vmid>', methods=['POST'])
 def snap_vm(vmid):
-    flash("VM "+vmid+" about to be snapshoted "+request.form["snapshot_name"])	
+    flash("Snapshot of "+vmid+" created with name "+request.form["snapshot_name"])	
     r = server.snap_vm(vmid, name=request.form["snapshot_name"], descr=request.form["snapshot_description"])
     flash(r)
     return redirect("/")
@@ -49,6 +49,7 @@ def snap_vm_form(vmid):
 
 @app.route('/revert/<vmid>/<sid>', methods=['GET'])
 def snap_revert(vmid, sid):
+    flash("VM "+vmid+" was reverted with the snapshot "+str(sid))	
     vm = server.revert_snapshot(vmid, sid)
     return render_template("index.html", servername=socket.gethostname(), vm=vm)
 

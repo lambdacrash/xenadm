@@ -28,7 +28,7 @@ Xen Server [{{ servername }}] - VM Ligh administration
 <h1>List of virtual machines</h1>
   <table class="table">
     <thead>
-      <tr><th>Name</th><th>@ IP</th><th>Status</th><th>Actions</th></tr>
+      <tr><th>Name</th><th>@ IP</th><th>Status</th><th># snapshots</th><th>Actions</th></tr>
     </thead>
     <tbody>
       {% for vm in vms %}
@@ -42,10 +42,19 @@ Xen Server [{{ servername }}] - VM Ligh administration
                 {% endif %}
             </td>
         <td>
+            {% if vm.snapshots|count > 0 %}
+                <a href="/viewsnap/{{ vm.id }}">
+                  <span class="glyphicon glyphicon-eye-open"></span>
+                  {{ vm.snapshots|count }}
+                </a>
+            {% endif %}          
+        </td>
+        <td>
 	<a href="/start/{{ vm.id }}" class="btn btn-success">Start</a>
 	<a href="/snap/{{ vm.id }}" class="btn btn-warning">Snapshot</a>
 	<a href="/stop/{{ vm.id }}" class="btn btn-danger">Stop</a>
-        </td></tr>
+        </td>
+        </tr>
       {% endfor %}
     </tbody>
   </table>

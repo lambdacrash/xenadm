@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Xen Server [{{ servername }}] - VM Ligh administration
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+     <a class="navbar-brand" href="#">Xen Server - {{ servername }}</a>
+    </div>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="bg-info">
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+{% endwith %}
+
+<a href="/">Go back to {{ servername }}</a>
+
+<h1>Create a new snapshot for {{ vm.name }}</h1>
+<form method="POST" action="/snap/{{ vm.id }}" role="form">
+    <div class="form-group">
+        <label for="snapshot_name">Snapshot name</label>
+        <input type="text" class="form-control" name="snapshot_name" id="snapshot_name" placeholder="Enter a name">
+    </div>
+    <div class="form-group">
+        <label for="snapshot_description">Description</label>
+        <input type="text" class="form-control" name="snapshot_description" id="snapshot_description" placeholder="Description">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+</form>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+Xen Server [{{ servername }}] - VM Ligh administration
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+     <a class="navbar-brand" href="#">Xen Server - {{ servername }}</a>
+    </div>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="bg-info">
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+{% endwith %}
+
+<a href="/">Go back to {{ servername }}</a>
+
+<h1>List of snapshots for {{ vm.name }}</h1>
+  <table class="table">
+    <thead>
+      <tr><th>Name</th><th>Description</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for s in vm.snapshots %}
+        <tr><td>{{ s.name }}</td><td>{{ s.descr}}</td>
+        <td>
+        <a href="/revert/{{ vm.id }}/{{ s.id }}" class="btn btn-warning">Revert</a>
+        </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

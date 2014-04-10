@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect
+from flask import Flask, flash, redirect, request
 from flask import render_template
 from VM import VM 
 from Server import Server
@@ -8,6 +8,7 @@ def list_vms():
     vms = []
     svms = server.list_vm()
     for vm in svms:
+        server.list_snapshots(vm)
         vms.append(vm)
     # ret = xe list blablabla
     # parse ret
@@ -34,11 +35,27 @@ def stop_vm(vmid):
     flash(ret)	
     return redirect("/")
 
-@app.route('/snap/<vmid>')
+@app.route('/snap/<vmid>', methods=['POST'])
 def snap_vm(vmid):
-    # do some shit xe blablabla
-    flash("VM "+vmid+" about to be snapshoted")	
+    flash("VM "+vmid+" about to be snapshoted "+request.form["snapshot_name"])	
+    r = server.snap_vm(vmid, name=request.form["snapshot_name"], descr=request.form["snapshot_description"])
+    flash(r)
     return redirect("/")
+
+@app.route('/snap/<vmid>', methods=['GET'])
+def snap_vm_form(vmid):
+    vm = server.get_vm(vmid)
+    return render_template("snapshot_form.html", servername=socket.gethostname(), vm=vm)
+
+@app.route('/revert/<vmid>/<sid>', methods=['GET'])
+def snap_revert(vmid, sid):
+    vm = server.revert_snapshot(vmid, sid)
+    return render_template("index.html", servername=socket.gethostname(), vm=vm)
+
+@app.route('/viewsnap/<vmid>')
+def view_snap(vmid):
+    vm = server.get_vm(vmid)
+    return render_template("snapshots.html", servername=socket.gethostname(), vm=vm)
 
 @app.route('/')
 def index():

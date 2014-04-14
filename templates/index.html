@@ -4,6 +4,17 @@
 Xen Server [{{ servername }}] - VM Ligh administration
 {% endblock %}
 
+{% block head %}
+<script type="text/javascript">
+function refresh(timeoutPeriod) {
+    setTimeout("location.reload(true);",timeoutPeriod);
+}
+window.onload = function(){refresh(30000)}
+</script>
+
+{% endblock %}
+
+
 {% block content %}
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
@@ -26,7 +37,7 @@ Xen Server [{{ servername }}] - VM Ligh administration
 {% endwith %}
 
 <h1>List of virtual machines</h1>
-  <table class="table">
+  <table class="table" onload="refresh(30000)">
     <thead>
       <tr><th>Name</th><th>@ IP</th><th>Status</th><th># snapshots</th><th>Actions</th></tr>
     </thead>

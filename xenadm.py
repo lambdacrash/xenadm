@@ -1,8 +1,30 @@
 from flask import Flask, flash, redirect, request
 from flask import render_template
-from VM import VM 
 from Server import Server
+from VM import VM 
+import ConfigParser
+import random
 import socket
+import sys
+
+
+server = None
+app = Flask(__name__)
+
+def ConfigSectionMap(section, config_file):
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+    dict1 = {}
+    options = config.options(section)
+    for option in options:
+        try:
+            dict1[option] = config.get(section, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            print("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
 
 def list_vms():
     vms = []
@@ -10,16 +32,8 @@ def list_vms():
     for vm in svms:
         server.list_snapshots(vm)
         vms.append(vm)
-    # ret = xe list blablabla
-    # parse ret
-    #vms.append(VM(ip="10.1.86.244", name="VM Toto", status="Starting"))
-    #vms.append(VM(ip="10.1.86.24", name="VM Tata", status="Stop"))
     return vms 
 
-server = Server(id="1", ip="10.1.86.8", user="root", password="secret")
-
-app = Flask(__name__)
-app.secret_key = 'some_secret'
 
 @app.route('/start/<vmid>')
 def start_vm(vmid):
@@ -69,5 +83,17 @@ def index():
     return render_template("index.html", servername=socket.gethostname(), vms=list_vms())
 
 if __name__ == '__main__':
+    configFile = "./server.conf"
+    if len(sys.argv) > 1:
+        configFile = sys.argv[1]
+        print("Use "+configFile+" from command line parameter for master server configuration")
+    else :
+        print("Use "+configFile+" as default for master server configuration")
+
+    app.secret_key = str(('%09x' % random.randrange(16**9)))
+    listen = ConfigSectionMap("Configuration", configFile)['listen']    
+    port = ConfigSectionMap("Configuration", configFile)['port']    
+    ms = ConfigSectionMap("MasterServer", configFile)
+    server = Server(id=str(ms["id"]), ip=str(ms["ip"]), user=str(ms["user"]), password=str(ms["password"]))
     app.debug = True 
-    app.run(host='0.0.0.0')
+    app.run(host=str(listen), port=int(port))
